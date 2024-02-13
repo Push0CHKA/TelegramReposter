@@ -59,10 +59,8 @@ SessionLocal = async_sessionmaker(
 )
 
 
-async def create_db_all():
+async def create_db(delete: bool = False):
     async with engine.begin() as conn:
+        if delete:
+            await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
-
-
-def create_db():
-    asyncio.run(create_db_all())
